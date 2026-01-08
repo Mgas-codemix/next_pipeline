@@ -3,7 +3,6 @@
     SAMTOOLS FLAGSTAT MODULE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Generates alignment statistics using samtools flagstat
-    Updated for Nextflow 25.10+ with eval output and topic channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -21,8 +20,7 @@ process SAMTOOLS_FLAGSTAT {
 
     output:
     tuple val(meta), path("*.flagstat"), emit: flagstat
-    // Nextflow 24.02+ eval output for version capture via topic channel
-    tuple val("${task.process}"), eval('samtools --version | head -n1 | sed "s/samtools //g"'), topic: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -37,6 +35,11 @@ process SAMTOOLS_FLAGSTAT {
         --threads $task.cpus \\
         $bam \\
         > ${prefix}.flagstat
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(samtools --version | head -n1 | sed 's/samtools //g')
+    END_VERSIONS
     """
 
     stub:
@@ -57,5 +60,10 @@ process SAMTOOLS_FLAGSTAT {
     0 + 0 with mate mapped to a different chr
     0 + 0 with mate mapped to a different chr (mapQ>=5)
     END_FLAGSTAT
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: 1.18
+    END_VERSIONS
     """
 }

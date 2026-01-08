@@ -3,7 +3,6 @@
     MINIMAP2 ALIGN MODULE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Aligns reads to genome using minimap2
-    Updated for Nextflow 25.10+ with eval output and topic channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -23,9 +22,7 @@ process MINIMAP2_ALIGN {
     output:
     tuple val(meta), path("*.sorted.bam"), emit: bam
     tuple val(meta), path("*.sorted.bam.bai"), emit: bai
-    // Nextflow 24.02+ eval output for version capture via topic channel
-    tuple val("${task.process}"), eval('minimap2 --version'), topic: versions
-    tuple val("${task.process}"), eval('samtools --version | head -n1 | sed "s/samtools //g"'), topic: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -47,6 +44,12 @@ process MINIMAP2_ALIGN {
         | samtools sort -@ ${task.cpus} -o ${prefix}.sorted.bam -
 
     samtools index -@ ${task.cpus} ${prefix}.sorted.bam
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        minimap2: \$(minimap2 --version)
+        samtools: \$(samtools --version | head -n1 | sed 's/samtools //g')
+    END_VERSIONS
     """
 
     stub:
@@ -54,5 +57,11 @@ process MINIMAP2_ALIGN {
     """
     touch ${prefix}.sorted.bam
     touch ${prefix}.sorted.bam.bai
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        minimap2: 2.26
+        samtools: 1.18
+    END_VERSIONS
     """
 }

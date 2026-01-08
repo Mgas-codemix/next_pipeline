@@ -15,8 +15,6 @@
     Requires Nextflow 24.04.0+
     Features used:
     - resourceLimits directive (24.04+)
-    - eval outputs for tool versions (24.02+)
-    - Topic channels for version collection (24.04+)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -150,12 +148,20 @@ workflow GENEBUILD_ANNOTATION {
     )
 
     //
-    // Collect software versions via topic channel (Nextflow 24.04+ feature)
-    // Topic channels collect versions from all processes automatically
+    // Collect software versions from all subworkflows
     //
-    ch_versions = Channel.topic('versions')
-        .map { process, version -> "${process}\t${version}" }
-        .collectFile(name: 'software_versions.tsv', newLine: true, storeDir: "${params.outdir}/pipeline_info")
+    ch_versions = Channel.empty()
+    ch_versions = ch_versions.mix(INPUT_VALIDATION.out.versions)
+    ch_versions = ch_versions.mix(ANNOTATION_ANALYSIS.out.versions)
+    ch_versions = ch_versions.mix(GENERATE_REPORT.out.versions)
+
+    if (params.run_rnaseq) {
+        ch_versions = ch_versions.mix(RNASEQ_PROCESSING.out.versions)
+    }
+
+    // Collate and save software versions
+    ch_versions
+        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'software_versions.yml')
 
     emit:
     report_html = GENERATE_REPORT.out.html

@@ -3,7 +3,6 @@
     VALIDATE FASTA MODULE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Validates genome FASTA file for basic sanity checks
-    Updated for Nextflow 25.10+ with eval output and topic channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -21,8 +20,7 @@ process VALIDATE_FASTA {
 
     output:
     path "fasta_validation.json", emit: validation_report
-    // Nextflow 24.02+ eval output for version capture via topic channel
-    tuple val("${task.process}"), eval('python --version | sed "s/Python //g"'), topic: versions
+    path "versions.yml"         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,10 +32,20 @@ process VALIDATE_FASTA {
         ${fasta} \\
         --output fasta_validation.json \\
         ${args}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
     """
 
     stub:
     """
     echo '{"valid": true, "stats": {"num_sequences": 3, "total_length": 1000, "gc_content": 50.0}}' > fasta_validation.json
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: 3.10.0
+    END_VERSIONS
     """
 }

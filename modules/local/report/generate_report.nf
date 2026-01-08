@@ -3,7 +3,6 @@
     GENERATE REPORT MODULE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Generates comprehensive HTML and Markdown report
-    Updated for Nextflow 25.10+ with eval output and topic channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -28,8 +27,7 @@ process GENERATE_REPORT {
     output:
     path "report.html", emit: html
     path "report.md"  , emit: markdown
-    // Nextflow 24.02+ eval output for version capture via topic channel
-    tuple val("${task.process}"), eval('python --version | sed "s/Python //g"'), topic: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -70,11 +68,21 @@ process GENERATE_REPORT {
         --output-html report.html \\
         --output-md report.md \\
         ${args}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
     """
 
     stub:
     """
     echo "<html><body><h1>Report</h1></body></html>" > report.html
     echo "# Report" > report.md
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: 3.10.0
+    END_VERSIONS
     """
 }
