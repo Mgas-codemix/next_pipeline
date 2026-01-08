@@ -291,4 +291,4 @@ nextflow run main.nf -profile test_stub -stub-run
 
 ## Author
 
-- Mgas-codemix
+- marica

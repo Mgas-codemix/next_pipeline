@@ -10,7 +10,7 @@
     - RNA-seq evidence processing
     - Comprehensive reporting
 
-    Author: Mgas-codemix
+    Author: marica
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
