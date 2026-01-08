@@ -1,0 +1,24 @@
+{
+    "valid": true,
+    "input_file": "genes.gtf",
+    "stats": {
+        "num_genes": 4,
+        "num_transcripts": 5,
+        "num_exons": 10,
+        "num_cds": 6,
+        "num_contigs": 3,
+        "feature_counts": {
+            "gene": 4,
+            "transcript": 5,
+            "exon": 10,
+            "CDS": 6,
+            "start_codon": 4,
+            "stop_codon": 4
+        },
+        "biotypes": {
+            "protein_coding": 4
+        }
+    },
+    "warnings": [],
+    "timestamp": "2026-01-08T15:30:05Z"
+}
