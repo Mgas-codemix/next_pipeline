@@ -12,11 +12,9 @@
 
     Author: marica
 
-    Updated for Nextflow 25.10+ features:
-    - Workflow outputs (publish block)
-    - Topic channels for version collection
-    - Eval outputs for tool versions
-    - resourceLimits directive
+    Requires Nextflow 24.04.0+
+    Features used:
+    - resourceLimits directive (24.04+)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -150,27 +148,20 @@ workflow GENEBUILD_ANNOTATION {
     )
 
     //
-    // Collect software versions via topic channel (Nextflow 25.04+ feature)
-    // Topic channels collect versions from all processes automatically
+    // Collect software versions from all subworkflows
     //
-    ch_versions = channel.topic('versions')
-        .map { process, version -> "${process}\t${version}" }
-        .collectFile(name: 'software_versions.tsv', newLine: true)
+    ch_versions = Channel.empty()
+    ch_versions = ch_versions.mix(INPUT_VALIDATION.out.versions)
+    ch_versions = ch_versions.mix(ANNOTATION_ANALYSIS.out.versions)
+    ch_versions = ch_versions.mix(GENERATE_REPORT.out.versions)
 
-    //
-    // WORKFLOW OUTPUTS - Nextflow 25.10+ publish block
-    // Assigns channels to named outputs defined in nextflow.config output block
-    //
-    publish:
-    validation         = INPUT_VALIDATION.out.fasta_validation
-                            .mix(INPUT_VALIDATION.out.gtf_validation)
-                            .mix(INPUT_VALIDATION.out.samplesheet_validation)
-    annotation_metrics = ANNOTATION_ANALYSIS.out.metrics
-    rnaseq_qc          = ch_rnaseq_qc
-    rnaseq_alignments  = ch_alignments
-    rnaseq_stats       = ch_stats
-    reports            = GENERATE_REPORT.out.html.mix(GENERATE_REPORT.out.markdown)
-    versions           = ch_versions
+    if (params.run_rnaseq) {
+        ch_versions = ch_versions.mix(RNASEQ_PROCESSING.out.versions)
+    }
+
+    // Collate and save software versions
+    ch_versions
+        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'software_versions.yml')
 
     emit:
     report_html = GENERATE_REPORT.out.html

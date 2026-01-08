@@ -3,7 +3,6 @@
     MINIMAP2 INDEX MODULE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Creates minimap2 index for genome
-    Updated for Nextflow 25.10+ with eval output and topic channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -20,9 +19,8 @@ process MINIMAP2_INDEX {
     path fasta
 
     output:
-    path "*.mmi", emit: index
-    // Nextflow 24.02+ eval output for version capture
-    tuple val("${task.process}"), eval('minimap2 --version'), topic: versions
+    path "*.mmi"      , emit: index
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -36,11 +34,21 @@ process MINIMAP2_INDEX {
         -d ${prefix}.mmi \\
         ${args} \\
         ${fasta}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        minimap2: \$(minimap2 --version)
+    END_VERSIONS
     """
 
     stub:
     def prefix = fasta.baseName
     """
     touch ${prefix}.mmi
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        minimap2: 2.26
+    END_VERSIONS
     """
 }

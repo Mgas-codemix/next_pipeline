@@ -1,6 +1,6 @@
 # Bioinformatics Annotation Pipeline
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A525.10.0-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.0-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg)](https://sylabs.io/docs/)
@@ -59,7 +59,7 @@ A modular, reproducible Nextflow DSL2 workflow for annotation validation, metric
 
 ### Prerequisites
 
-- [Nextflow](https://www.nextflow.io/) (>= 25.10.0)
+- [Nextflow](https://www.nextflow.io/) (>= 24.04.0)
 - [Docker](https://www.docker.com/), [Singularity](https://sylabs.io/docs/), or [Conda](https://docs.conda.io/)
 
 ### Installation

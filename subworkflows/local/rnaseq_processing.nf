@@ -3,7 +3,6 @@
     RNA-SEQ PROCESSING SUBWORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Processes RNA-seq reads: QC, alignment, and statistics
-    Updated for Nextflow 25.10+ - versions collected via topic channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -18,15 +17,19 @@ workflow RNASEQ_PROCESSING {
     fasta     // path: genome fasta
 
     main:
+    ch_versions = Channel.empty()
+
     //
     // MODULE: Run fastp for QC
     //
     FASTP(samples)
+    ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
     //
     // MODULE: Create minimap2 index
     //
     MINIMAP2_INDEX(fasta)
+    ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
 
     //
     // MODULE: Align reads with minimap2
@@ -35,12 +38,14 @@ workflow RNASEQ_PROCESSING {
     ch_index = MINIMAP2_INDEX.out.index
 
     MINIMAP2_ALIGN(ch_reads_for_alignment, ch_index.collect())
+    ch_versions = ch_versions.mix(MINIMAP2_ALIGN.out.versions.first())
 
     //
     // MODULE: Get alignment statistics
     //
     ch_bam_bai = MINIMAP2_ALIGN.out.bam.join(MINIMAP2_ALIGN.out.bai)
     SAMTOOLS_FLAGSTAT(ch_bam_bai)
+    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT.out.versions.first())
 
     emit:
     trimmed_reads   = FASTP.out.reads           // channel: [ val(meta), [ reads ] ]
@@ -50,5 +55,5 @@ workflow RNASEQ_PROCESSING {
     bam             = MINIMAP2_ALIGN.out.bam    // channel: [ val(meta), bam ]
     bai             = MINIMAP2_ALIGN.out.bai    // channel: [ val(meta), bai ]
     flagstat        = SAMTOOLS_FLAGSTAT.out.flagstat  // channel: [ val(meta), flagstat ]
-    // Note: versions now collected automatically via topic channels
+    versions        = ch_versions               // channel: [ versions.yml ]
 }

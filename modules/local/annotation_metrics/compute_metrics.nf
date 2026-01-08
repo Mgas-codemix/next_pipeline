@@ -3,7 +3,6 @@
     COMPUTE ANNOTATION METRICS MODULE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Computes comprehensive annotation metrics from GTF and optionally FASTA
-    Updated for Nextflow 25.10+ with eval output and topic channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -13,8 +12,8 @@ process COMPUTE_ANNOTATION_METRICS {
 
     conda "conda-forge::python=3.10"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/python:3.10' :
-        'quay.io/biocontainers/python:3.10' }"
+        'https://depot.galaxyproject.org/singularity/python:3.10.4' :
+        'biocontainers/python:3.10.4' }"
 
     input:
     path gtf
@@ -22,8 +21,7 @@ process COMPUTE_ANNOTATION_METRICS {
 
     output:
     path "annotation_metrics.json", emit: metrics
-    // Nextflow 24.02+ eval output for version capture via topic channel
-    tuple val("${task.process}"), eval('python --version | sed "s/Python //g"'), topic: versions
+    path "versions.yml"           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -38,6 +36,11 @@ process COMPUTE_ANNOTATION_METRICS {
         --output annotation_metrics.json \\
         --top-contigs ${params.top_contigs ?: 10} \\
         ${args}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
     """
 
     stub:
@@ -55,5 +58,10 @@ process COMPUTE_ANNOTATION_METRICS {
         "exon_lengths": {"count": 10, "min": 50, "max": 151, "mean": 100, "median": 100}
     }
     END_JSON
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: 3.10.0
+    END_VERSIONS
     """
 }
