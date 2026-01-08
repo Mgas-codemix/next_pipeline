@@ -11,6 +11,12 @@
     - Comprehensive reporting
 
     Author: marica
+
+    Updated for Nextflow 25.10+ features:
+    - Workflow outputs (publish block)
+    - Topic channels for version collection
+    - Eval outputs for tool versions
+    - resourceLimits directive
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -44,8 +50,6 @@ workflow GENEBUILD_ANNOTATION {
 
     main:
 
-    ch_versions = Channel.empty()
-
     //
     // STEP 1: Validate inputs
     //
@@ -57,6 +61,7 @@ workflow GENEBUILD_ANNOTATION {
     ║  Annotation GTF: ${params.gtf}
     ║  Sample Sheet  : ${params.input}
     ║  Output Dir    : ${params.outdir}
+    ║  Nextflow Ver  : ${workflow.nextflow.version}
     ╚═══════════════════════════════════════════════════════════════════════╝
     """.stripIndent()
 
@@ -73,18 +78,14 @@ workflow GENEBUILD_ANNOTATION {
         ch_gtf,
         ch_samplesheet
     )
-    ch_versions = ch_versions.mix(INPUT_VALIDATION.out.versions)
 
     //
     // STEP 2: Compute annotation metrics
-    //
-    // SUBWORKFLOW: Annotation analysis
     //
     ANNOTATION_ANALYSIS(
         ch_gtf,
         ch_fasta
     )
-    ch_versions = ch_versions.mix(ANNOTATION_ANALYSIS.out.versions)
 
     //
     // STEP 3: RNA-seq evidence processing (optional)
@@ -94,7 +95,6 @@ workflow GENEBUILD_ANNOTATION {
             INPUT_VALIDATION.out.samples,
             ch_fasta.collect()
         )
-        ch_versions = ch_versions.mix(RNASEQ_PROCESSING.out.versions)
 
         // Collect fastp JSONs for report
         ch_fastp_jsons = RNASEQ_PROCESSING.out.fastp_json
@@ -105,9 +105,25 @@ workflow GENEBUILD_ANNOTATION {
         ch_flagstat_files = RNASEQ_PROCESSING.out.flagstat
             .map { meta, flagstat -> flagstat }
             .collect()
+
+        // Collect outputs for workflow publish block
+        ch_rnaseq_qc = RNASEQ_PROCESSING.out.fastp_json
+            .mix(RNASEQ_PROCESSING.out.fastp_html)
+            .map { meta, file -> file }
+
+        ch_alignments = RNASEQ_PROCESSING.out.bam
+            .mix(RNASEQ_PROCESSING.out.bai)
+            .map { meta, file -> file }
+
+        ch_stats = RNASEQ_PROCESSING.out.flagstat
+            .map { meta, file -> file }
+
     } else {
         ch_fastp_jsons = Channel.empty().collect()
         ch_flagstat_files = Channel.empty().collect()
+        ch_rnaseq_qc = Channel.empty()
+        ch_alignments = Channel.empty()
+        ch_stats = Channel.empty()
     }
 
     //
@@ -132,14 +148,29 @@ workflow GENEBUILD_ANNOTATION {
         ch_flagstat_files.ifEmpty([]),
         ch_params_json
     )
-    ch_versions = ch_versions.mix(GENERATE_REPORT.out.versions)
 
     //
-    // Collect versions
+    // Collect software versions via topic channel (Nextflow 25.04+ feature)
+    // Topic channels collect versions from all processes automatically
     //
-    ch_versions
-        .unique()
-        .collectFile(name: 'versions.yml', storeDir: "${params.outdir}/pipeline_info")
+    ch_versions = channel.topic('versions')
+        .map { process, version -> "${process}\t${version}" }
+        .collectFile(name: 'software_versions.tsv', newLine: true)
+
+    //
+    // WORKFLOW OUTPUTS - Nextflow 25.10+ publish block
+    // Assigns channels to named outputs defined in nextflow.config output block
+    //
+    publish:
+    validation         = INPUT_VALIDATION.out.fasta_validation
+                            .mix(INPUT_VALIDATION.out.gtf_validation)
+                            .mix(INPUT_VALIDATION.out.samplesheet_validation)
+    annotation_metrics = ANNOTATION_ANALYSIS.out.metrics
+    rnaseq_qc          = ch_rnaseq_qc
+    rnaseq_alignments  = ch_alignments
+    rnaseq_stats       = ch_stats
+    reports            = GENERATE_REPORT.out.html.mix(GENERATE_REPORT.out.markdown)
+    versions           = ch_versions
 
     emit:
     report_html = GENERATE_REPORT.out.html
@@ -149,7 +180,7 @@ workflow GENEBUILD_ANNOTATION {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
+    ENTRY WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 

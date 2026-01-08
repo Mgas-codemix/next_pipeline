@@ -3,6 +3,7 @@
     ANNOTATION ANALYSIS SUBWORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Computes annotation summary metrics
+    Updated for Nextflow 25.10+ - versions collected via topic channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -14,15 +15,12 @@ workflow ANNOTATION_ANALYSIS {
     fasta   // path: genome fasta (optional)
 
     main:
-    ch_versions = Channel.empty()
-
     //
     // MODULE: Compute annotation metrics
     //
     COMPUTE_ANNOTATION_METRICS(gtf, fasta)
-    ch_versions = ch_versions.mix(COMPUTE_ANNOTATION_METRICS.out.versions)
 
     emit:
     metrics   = COMPUTE_ANNOTATION_METRICS.out.metrics  // path: annotation_metrics.json
-    versions  = ch_versions                             // channel: [ versions.yml ]
+    // Note: versions now collected automatically via topic channels
 }

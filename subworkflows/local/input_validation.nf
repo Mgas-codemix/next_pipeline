@@ -3,6 +3,7 @@
     INPUT VALIDATION SUBWORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Validates all input files (FASTA, GTF, samplesheet)
+    Updated for Nextflow 25.10+ - versions collected via topic channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -17,19 +18,14 @@ workflow INPUT_VALIDATION {
     samplesheet  // path: samplesheet csv
 
     main:
-    ch_versions = Channel.empty()
-
     // Validate FASTA
     VALIDATE_FASTA(fasta)
-    ch_versions = ch_versions.mix(VALIDATE_FASTA.out.versions)
 
     // Validate GTF
     VALIDATE_GTF(gtf)
-    ch_versions = ch_versions.mix(VALIDATE_GTF.out.versions)
 
     // Validate samplesheet
     VALIDATE_SAMPLESHEET(samplesheet)
-    ch_versions = ch_versions.mix(VALIDATE_SAMPLESHEET.out.versions)
 
     // Parse validated samplesheet into channel of samples
     ch_samples = VALIDATE_SAMPLESHEET.out.validated_csv
@@ -59,5 +55,5 @@ workflow INPUT_VALIDATION {
     gtf_validation            = VALIDATE_GTF.out.validation_report    // path: gtf_validation.json
     samplesheet_validation    = VALIDATE_SAMPLESHEET.out.validation_report // path: samplesheet_validation.json
     validated_samplesheet     = VALIDATE_SAMPLESHEET.out.validated_csv     // path: validated_samplesheet.csv
-    versions                  = ch_versions                           // channel: [ versions.yml ]
+    // Note: versions now collected automatically via topic channels
 }

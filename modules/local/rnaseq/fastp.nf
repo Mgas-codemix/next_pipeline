@@ -3,6 +3,7 @@
     FASTP MODULE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Quality control and preprocessing of FASTQ reads
+    Updated for Nextflow 25.10+ with eval output and topic channels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -23,8 +24,9 @@ process FASTP {
     tuple val(meta), path("*.json")          , emit: json
     tuple val(meta), path("*.html")          , emit: html
     tuple val(meta), path("*.log")           , emit: log
-    path "versions.yml"                      , emit: versions
     tuple val(meta), path("*.fail.fastq.gz") , optional: true, emit: reads_fail
+    // Nextflow 24.02+ eval output for version capture
+    tuple val("${task.process}"), eval('fastp --version 2>&1 | sed "s/fastp //g"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -44,11 +46,6 @@ process FASTP {
             --thread $task.cpus \\
             ${args} \\
             2> ${prefix}.fastp.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            fastp: \$(fastp --version 2>&1 | sed -e "s/fastp //g")
-        END_VERSIONS
         """
     } else {
         """
@@ -62,11 +59,6 @@ process FASTP {
             --thread $task.cpus \\
             ${args} \\
             2> ${prefix}.fastp.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            fastp: \$(fastp --version 2>&1 | sed -e "s/fastp //g")
-        END_VERSIONS
         """
     }
 
@@ -78,11 +70,6 @@ process FASTP {
         touch ${prefix}.fastp.json
         touch ${prefix}.fastp.html
         touch ${prefix}.fastp.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            fastp: 0.23.4
-        END_VERSIONS
         """
     } else {
         """
@@ -91,11 +78,6 @@ process FASTP {
         touch ${prefix}.fastp.json
         touch ${prefix}.fastp.html
         touch ${prefix}.fastp.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            fastp: 0.23.4
-        END_VERSIONS
         """
     }
 }
