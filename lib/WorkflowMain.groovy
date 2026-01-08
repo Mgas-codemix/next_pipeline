@@ -16,7 +16,7 @@ class WorkflowMain {
     public static void helpMessage(workflow, params, log) {
         def help_string = """
         ╔═══════════════════════════════════════════════════════════════════════╗
-        ║     ENSEMBL GENEBUILD ANNOTATION PIPELINE                             ║
+        ║     BIOINFORMATICS ANNOTATION PIPELINE                                ║
         ╠═══════════════════════════════════════════════════════════════════════╣
         ║  Annotation validation, metrics computation, and RNA-seq evidence     ║
         ╚═══════════════════════════════════════════════════════════════════════╝
@@ -51,7 +51,7 @@ class WorkflowMain {
             # Run test dataset
             nextflow run main.nf -profile test,docker
 
-        Documentation: https://github.com/Ensembl/genebuild-annotation-pipeline
+        Documentation: https://github.com/Mgas-codemix/next_pipeline
         """.stripIndent()
 
         log.info help_string
@@ -81,7 +81,7 @@ class WorkflowMain {
         // Print parameter summary
         def summary = [
             'Pipeline': [
-                'Name'      : workflow.manifest.name ?: 'genebuild-annotation',
+                'Name'      : workflow.manifest.name ?: 'bioinformatics-annotation-pipeline',
                 'Version'   : workflow.manifest.version ?: '1.0.0',
                 'Nextflow'  : workflow.nextflow.version,
                 'Container' : workflow.containerEngine ?: 'None'
@@ -131,7 +131,7 @@ class WorkflowMain {
     public static String getWorkflowSummary(workflow, params) {
         def summary = [:]
 
-        summary['Pipeline Name']     = workflow.manifest.name ?: 'genebuild-annotation'
+        summary['Pipeline Name']     = workflow.manifest.name ?: 'bioinformatics-annotation-pipeline'
         summary['Pipeline Version']  = workflow.manifest.version ?: '1.0.0'
         summary['Nextflow Version']  = workflow.nextflow.version
         summary['Container Engine']  = workflow.containerEngine ?: 'None'

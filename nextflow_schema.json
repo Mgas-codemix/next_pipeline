@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/ensembl/genebuild-annotation-pipeline/master/nextflow_schema.json",
-    "title": "Ensembl Genebuild Annotation Pipeline Parameters",
+    "$id": "https://raw.githubusercontent.com/Mgas-codemix/next_pipeline/master/nextflow_schema.json",
+    "title": "Bioinformatics Annotation Pipeline Parameters",
     "description": "Annotation validation, metrics computation, and RNA-seq evidence pipeline",
     "type": "object",
     "definitions": {

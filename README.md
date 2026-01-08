@@ -1,4 +1,4 @@
-# Ensembl Genebuild Annotation Pipeline
+# Bioinformatics Annotation Pipeline
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
@@ -11,7 +11,7 @@ A modular, reproducible Nextflow DSL2 workflow for annotation validation, metric
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                    GENEBUILD ANNOTATION PIPELINE                         │
+│                    BIOINFORMATICS ANNOTATION PIPELINE                    │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
@@ -65,8 +65,8 @@ A modular, reproducible Nextflow DSL2 workflow for annotation validation, metric
 ### Installation
 
 ```bash
-git clone https://github.com/Ensembl/genebuild-annotation-pipeline.git
-cd genebuild-annotation-pipeline
+git clone https://github.com/Mgas-codemix/next_pipeline.git
+cd next_pipeline
 ```
 
 ### Running the Pipeline
@@ -285,25 +285,10 @@ nextflow run main.nf -profile test_stub -stub-run
 ## Assumptions
 
 1. **FASTA format**: Standard nucleotide FASTA with unique sequence IDs
-2. **GTF format**: Ensembl-style GTF with standard attributes
+2. **GTF format**: Standard GTF with standard attributes
 3. **FASTQ format**: Illumina-style paired-end or single-end reads (gzipped)
 4. **Strandedness**: Known library prep strandedness for accurate processing
 
-## Citation
+## Author
 
-If you use this pipeline, please cite:
-
-> Ensembl Genebuild Annotation Pipeline (2024). EMBL-EBI.
-
-## Support
-
-- **Issues**: [GitHub Issues](https://github.com/Ensembl/genebuild-annotation-pipeline/issues)
-- **Documentation**: [Ensembl Documentation](https://www.ensembl.org/info/genome/genebuild/index.html)
-
-## License
-
-This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
-
-## Authors
-
-- EMBL-EBI Ensembl Genebuild Team
+- Mgas-codemix

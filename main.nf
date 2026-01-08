@@ -2,7 +2,7 @@
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ENSEMBL GENEBUILD ANNOTATION PIPELINE
+    BIOINFORMATICS ANNOTATION PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     A modular, reproducible Nextflow DSL2 workflow for:
     - Input validation (FASTA, GTF, RNA-seq reads)
@@ -10,7 +10,7 @@
     - RNA-seq evidence processing
     - Comprehensive reporting
 
-    Author: EMBL-EBI Ensembl Genebuild Team
+    Author: Mgas-codemix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -51,7 +51,7 @@ workflow GENEBUILD_ANNOTATION {
     //
     log.info """
     ╔═══════════════════════════════════════════════════════════════════════╗
-    ║     ENSEMBL GENEBUILD ANNOTATION PIPELINE v${workflow.manifest.version ?: '1.0.0'}                   ║
+    ║     BIOINFORMATICS ANNOTATION PIPELINE v${workflow.manifest.version ?: '1.0.0'}                      ║
     ╠═══════════════════════════════════════════════════════════════════════╣
     ║  Genome FASTA  : ${params.fasta}
     ║  Annotation GTF: ${params.gtf}
