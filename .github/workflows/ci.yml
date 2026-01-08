@@ -14,7 +14,7 @@ on:
 
 env:
   NXF_ANSI_LOG: false
-  NXF_VER: "25.10.0"
+  NXF_VER: "24.04.4"
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"

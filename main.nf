@@ -12,11 +12,11 @@
 
     Author: marica
 
-    Updated for Nextflow 25.10+ features:
-    - Workflow outputs (publish block)
-    - Topic channels for version collection
-    - Eval outputs for tool versions
-    - resourceLimits directive
+    Requires Nextflow 24.04.0+
+    Features used:
+    - resourceLimits directive (24.04+)
+    - eval outputs for tool versions (24.02+)
+    - Topic channels for version collection (24.04+)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -150,27 +150,12 @@ workflow GENEBUILD_ANNOTATION {
     )
 
     //
-    // Collect software versions via topic channel (Nextflow 25.04+ feature)
+    // Collect software versions via topic channel (Nextflow 24.04+ feature)
     // Topic channels collect versions from all processes automatically
     //
-    ch_versions = channel.topic('versions')
+    ch_versions = Channel.topic('versions')
         .map { process, version -> "${process}\t${version}" }
-        .collectFile(name: 'software_versions.tsv', newLine: true)
-
-    //
-    // WORKFLOW OUTPUTS - Nextflow 25.10+ publish block
-    // Assigns channels to named outputs defined in nextflow.config output block
-    //
-    publish:
-    validation         = INPUT_VALIDATION.out.fasta_validation
-                            .mix(INPUT_VALIDATION.out.gtf_validation)
-                            .mix(INPUT_VALIDATION.out.samplesheet_validation)
-    annotation_metrics = ANNOTATION_ANALYSIS.out.metrics
-    rnaseq_qc          = ch_rnaseq_qc
-    rnaseq_alignments  = ch_alignments
-    rnaseq_stats       = ch_stats
-    reports            = GENERATE_REPORT.out.html.mix(GENERATE_REPORT.out.markdown)
-    versions           = ch_versions
+        .collectFile(name: 'software_versions.tsv', newLine: true, storeDir: "${params.outdir}/pipeline_info")
 
     emit:
     report_html = GENERATE_REPORT.out.html
