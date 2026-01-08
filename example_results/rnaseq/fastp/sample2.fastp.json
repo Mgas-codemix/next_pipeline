@@ -1,0 +1,41 @@
+{
+    "summary": {
+        "before_filtering": {
+            "total_reads": 12000,
+            "total_bases": 1812000,
+            "q20_bases": 1740000,
+            "q30_bases": 1656000,
+            "q20_rate": 0.9603,
+            "q30_rate": 0.9139,
+            "read1_mean_length": 151,
+            "read2_mean_length": 151,
+            "gc_content": 0.4756
+        },
+        "after_filtering": {
+            "total_reads": 11820,
+            "total_bases": 1784820,
+            "q20_bases": 1722000,
+            "q30_bases": 1644000,
+            "q20_rate": 0.9648,
+            "q30_rate": 0.9211,
+            "read1_mean_length": 151,
+            "read2_mean_length": 151,
+            "gc_content": 0.4743
+        }
+    },
+    "filtering_result": {
+        "passed_filter_reads": 11820,
+        "low_quality_reads": 120,
+        "too_many_N_reads": 0,
+        "too_short_reads": 60,
+        "low_complexity_reads": 0
+    },
+    "duplication": {
+        "rate": 0.0312
+    },
+    "adapter_cutting": {
+        "adapter_trimmed_reads": 300,
+        "adapter_trimmed_bases": 15000
+    },
+    "command": "fastp -i sample2_R1.fastq.gz -I sample2_R2.fastq.gz -o sample2.fastp.R1.fastq.gz -O sample2.fastp.R2.fastq.gz --json sample2.fastp.json --html sample2.fastp.html"
+}

@@ -1,0 +1,20 @@
+{
+    "valid": true,
+    "input_file": "genome.fa",
+    "stats": {
+        "num_sequences": 3,
+        "total_length": 1050,
+        "gc_content": 42.5,
+        "n_content": 0.0,
+        "min_length": 300,
+        "max_length": 400,
+        "mean_length": 350.0,
+        "sequences": [
+            {"id": "chr1", "length": 400, "gc_content": 43.2},
+            {"id": "chr2", "length": 350, "gc_content": 41.8},
+            {"id": "chr3", "length": 300, "gc_content": 42.5}
+        ]
+    },
+    "warnings": [],
+    "timestamp": "2026-01-08T15:30:00Z"
+}

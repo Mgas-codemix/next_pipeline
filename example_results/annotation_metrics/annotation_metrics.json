@@ -1,0 +1,53 @@
+{
+    "summary": {
+        "num_genes": 4,
+        "num_transcripts": 5,
+        "num_exons": 10,
+        "num_cds": 6,
+        "num_contigs": 3,
+        "genes_per_contig": 1.33,
+        "transcripts_per_gene": 1.25,
+        "exons_per_transcript": 2.0
+    },
+    "transcript_lengths": {
+        "count": 5,
+        "min": 80,
+        "max": 520,
+        "mean": 276.0,
+        "median": 250,
+        "std": 156.8
+    },
+    "exon_lengths": {
+        "count": 10,
+        "min": 50,
+        "max": 200,
+        "mean": 112.5,
+        "median": 100,
+        "std": 45.2
+    },
+    "cds_lengths": {
+        "count": 6,
+        "min": 45,
+        "max": 180,
+        "mean": 98.3,
+        "median": 90,
+        "std": 42.1
+    },
+    "intron_lengths": {
+        "count": 5,
+        "min": 100,
+        "max": 500,
+        "mean": 245.0,
+        "median": 200,
+        "std": 135.6
+    },
+    "contig_stats": {
+        "chr1": {"genes": 2, "transcripts": 2, "exons": 4},
+        "chr2": {"genes": 1, "transcripts": 2, "exons": 4},
+        "chr3": {"genes": 1, "transcripts": 1, "exons": 2}
+    },
+    "biotype_distribution": {
+        "protein_coding": 4
+    },
+    "timestamp": "2026-01-08T15:31:00Z"
+}

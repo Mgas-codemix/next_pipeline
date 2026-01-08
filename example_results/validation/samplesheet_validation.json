@@ -1,0 +1,27 @@
+{
+    "valid": true,
+    "input_file": "samplesheet.csv",
+    "stats": {
+        "num_samples": 2,
+        "paired_end_samples": 2,
+        "single_end_samples": 0,
+        "samples": [
+            {
+                "sample": "sample1",
+                "fastq_1": "tests/data/reads_1.fq.gz",
+                "fastq_2": "tests/data/reads_2.fq.gz",
+                "strandedness": "reverse",
+                "single_end": false
+            },
+            {
+                "sample": "sample2",
+                "fastq_1": "tests/data/sample2_1.fq.gz",
+                "fastq_2": "tests/data/sample2_2.fq.gz",
+                "strandedness": "reverse",
+                "single_end": false
+            }
+        ]
+    },
+    "warnings": [],
+    "timestamp": "2026-01-08T15:30:10Z"
+}

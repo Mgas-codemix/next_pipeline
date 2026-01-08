@@ -1,0 +1,53 @@
+{
+    "summary": {
+        "before_filtering": {
+            "total_reads": 10000,
+            "total_bases": 1510000,
+            "q20_bases": 1450000,
+            "q30_bases": 1380000,
+            "q20_rate": 0.9603,
+            "q30_rate": 0.9139,
+            "read1_mean_length": 151,
+            "read2_mean_length": 151,
+            "gc_content": 0.4825
+        },
+        "after_filtering": {
+            "total_reads": 9850,
+            "total_bases": 1487350,
+            "q20_bases": 1435000,
+            "q30_bases": 1370000,
+            "q20_rate": 0.9648,
+            "q30_rate": 0.9211,
+            "read1_mean_length": 151,
+            "read2_mean_length": 151,
+            "gc_content": 0.4812
+        }
+    },
+    "filtering_result": {
+        "passed_filter_reads": 9850,
+        "low_quality_reads": 100,
+        "too_many_N_reads": 0,
+        "too_short_reads": 50,
+        "low_complexity_reads": 0
+    },
+    "duplication": {
+        "rate": 0.0245
+    },
+    "adapter_cutting": {
+        "adapter_trimmed_reads": 250,
+        "adapter_trimmed_bases": 12500
+    },
+    "read1_before_filtering": {
+        "total_reads": 5000,
+        "total_bases": 755000,
+        "q20_bases": 725000,
+        "q30_bases": 690000
+    },
+    "read2_before_filtering": {
+        "total_reads": 5000,
+        "total_bases": 755000,
+        "q20_bases": 725000,
+        "q30_bases": 690000
+    },
+    "command": "fastp -i sample1_R1.fastq.gz -I sample1_R2.fastq.gz -o sample1.fastp.R1.fastq.gz -O sample1.fastp.R2.fastq.gz --json sample1.fastp.json --html sample1.fastp.html"
+}

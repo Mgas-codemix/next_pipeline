@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bioinformatics Annotation Pipeline Report</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 30px; border-left: 4px solid #3498db; padding-left: 10px; }
+        h3 { color: #7f8c8d; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f1f1f1; }
+        .success { color: #27ae60; font-weight: bold; }
+        .warning { color: #f39c12; font-weight: bold; }
+        .metric-card { display: inline-block; background: #ecf0f1; padding: 15px 25px; margin: 5px; border-radius: 5px; }
+        .metric-value { font-size: 24px; font-weight: bold; color: #2980b9; }
+        .metric-label { font-size: 12px; color: #7f8c8d; text-transform: uppercase; }
+        .provenance { background: #fafafa; padding: 15px; border-radius: 5px; margin-top: 20px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bioinformatics Annotation Pipeline Report</h1>
+
+        <h2>1. Input Validation Summary</h2>
+
+        <h3>FASTA Validation</h3>
+        <table>
+            <tr><th>Metric</th><th>Value</th><th>Status</th></tr>
+            <tr><td>Input File</td><td>genome.fa</td><td class="success">Valid</td></tr>
+            <tr><td>Number of Sequences</td><td>3</td><td>-</td></tr>
+            <tr><td>Total Length</td><td>1,050 bp</td><td>-</td></tr>
+            <tr><td>GC Content</td><td>42.5%</td><td>-</td></tr>
+        </table>
+
+        <h3>GTF Validation</h3>
+        <table>
+            <tr><th>Metric</th><th>Value</th><th>Status</th></tr>
+            <tr><td>Input File</td><td>genes.gtf</td><td class="success">Valid</td></tr>
+            <tr><td>Number of Genes</td><td>4</td><td>-</td></tr>
+            <tr><td>Number of Transcripts</td><td>5</td><td>-</td></tr>
+            <tr><td>Number of Exons</td><td>10</td><td>-</td></tr>
+        </table>
+
+        <h3>Samplesheet Validation</h3>
+        <table>
+            <tr><th>Metric</th><th>Value</th><th>Status</th></tr>
+            <tr><td>Input File</td><td>samplesheet.csv</td><td class="success">Valid</td></tr>
+            <tr><td>Number of Samples</td><td>2</td><td>-</td></tr>
+            <tr><td>Paired-end Samples</td><td>2</td><td>-</td></tr>
+            <tr><td>Single-end Samples</td><td>0</td><td>-</td></tr>
+        </table>
+
+        <h2>2. Annotation Metrics</h2>
+
+        <div class="metric-card">
+            <div class="metric-value">4</div>
+            <div class="metric-label">Genes</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">5</div>
+            <div class="metric-label">Transcripts</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">10</div>
+            <div class="metric-label">Exons</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">6</div>
+            <div class="metric-label">CDS</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">3</div>
+            <div class="metric-label">Contigs</div>
+        </div>
+
+        <h3>Length Statistics</h3>
+        <table>
+            <tr><th>Feature</th><th>Count</th><th>Min</th><th>Max</th><th>Mean</th><th>Median</th></tr>
+            <tr><td>Transcript Lengths</td><td>5</td><td>80</td><td>520</td><td>276.0</td><td>250</td></tr>
+            <tr><td>Exon Lengths</td><td>10</td><td>50</td><td>200</td><td>112.5</td><td>100</td></tr>
+            <tr><td>CDS Lengths</td><td>6</td><td>45</td><td>180</td><td>98.3</td><td>90</td></tr>
+            <tr><td>Intron Lengths</td><td>5</td><td>100</td><td>500</td><td>245.0</td><td>200</td></tr>
+        </table>
+
+        <h2>3. RNA-seq Processing Results</h2>
+
+        <h3>Read Quality Control (fastp)</h3>
+        <table>
+            <tr>
+                <th>Sample</th>
+                <th>Input Reads</th>
+                <th>Output Reads</th>
+                <th>Pass Rate</th>
+                <th>Q30 Rate</th>
+                <th>GC Content</th>
+            </tr>
+            <tr>
+                <td>sample1</td>
+                <td>10,000</td>
+                <td>9,850</td>
+                <td class="success">98.5%</td>
+                <td>92.1%</td>
+                <td>48.1%</td>
+            </tr>
+            <tr>
+                <td>sample2</td>
+                <td>12,000</td>
+                <td>11,820</td>
+                <td class="success">98.5%</td>
+                <td>92.1%</td>
+                <td>47.4%</td>
+            </tr>
+        </table>
+
+        <h3>Alignment Statistics</h3>
+        <table>
+            <tr>
+                <th>Sample</th>
+                <th>Total Reads</th>
+                <th>Mapped</th>
+                <th>Mapping Rate</th>
+                <th>Properly Paired</th>
+                <th>Singletons</th>
+            </tr>
+            <tr>
+                <td>sample1</td>
+                <td>9,850</td>
+                <td>9,620</td>
+                <td class="success">97.67%</td>
+                <td>95.43%</td>
+                <td>1.22%</td>
+            </tr>
+            <tr>
+                <td>sample2</td>
+                <td>11,820</td>
+                <td>11,544</td>
+                <td class="success">97.67%</td>
+                <td>95.43%</td>
+                <td>1.22%</td>
+            </tr>
+        </table>
+
+        <h2>4. Software Versions</h2>
+        <table>
+            <tr><th>Process</th><th>Software</th><th>Version</th></tr>
+            <tr><td>VALIDATE_FASTA</td><td>Python</td><td>3.10.12</td></tr>
+            <tr><td>VALIDATE_GTF</td><td>Python</td><td>3.10.12</td></tr>
+            <tr><td>VALIDATE_SAMPLESHEET</td><td>Python</td><td>3.10.12</td></tr>
+            <tr><td>COMPUTE_ANNOTATION_METRICS</td><td>Python</td><td>3.10.12</td></tr>
+            <tr><td>FASTP</td><td>fastp</td><td>0.23.4</td></tr>
+            <tr><td>MINIMAP2_INDEX</td><td>minimap2</td><td>2.26</td></tr>
+            <tr><td>MINIMAP2_ALIGN</td><td>minimap2</td><td>2.26</td></tr>
+            <tr><td>SAMTOOLS_FLAGSTAT</td><td>samtools</td><td>1.18</td></tr>
+            <tr><td>GENERATE_REPORT</td><td>Python</td><td>3.10.12</td></tr>
+        </table>
+
+        <div class="provenance">
+            <h3>Provenance Information</h3>
+            <p><strong>Pipeline:</strong> bioinformatics-annotation-pipeline v1.0.0</p>
+            <p><strong>Nextflow Version:</strong> 25.10.0</p>
+            <p><strong>Run Date:</strong> 2026-01-08T15:30:00Z</p>
+            <p><strong>Author:</strong> marica</p>
+            <p><strong>Working Directory:</strong> /home/user/next_pipeline</p>
+        </div>
+    </div>
+</body>
+</html>
